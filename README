@@ -1,0 +1,4 @@
+Logstash puppet module.
+
+It uses the Debian package that you can create from upstream.  See 
+https://github.com/logstash/logstash/blob/master/debian/build.sh
