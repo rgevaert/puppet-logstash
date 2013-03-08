@@ -1,7 +1,7 @@
 class logstash::config
 {
   file {
-    $logstash::conf_dir:
+    $logstash::confd_dir:
       ensure  => directory,
       purge   => true,
       recurse => true;

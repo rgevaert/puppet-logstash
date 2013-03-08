@@ -4,6 +4,7 @@ class logstash (
   $start_on_boot   = $logstash::params::start_on_boot,
   $memory          = $logstash::params::memory,
   $conf_dir        = $logstash::params::conf_dir,
+  $confd_dir       = $logstash::params::confd_dir,
 )
   inherits logstash::params
 {
