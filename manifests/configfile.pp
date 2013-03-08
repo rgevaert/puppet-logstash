@@ -3,7 +3,7 @@ define logstash::configfile (
   $ensure = present,
 ) {
   file {
-    "${logstash::conf_dir}/${name}":
+    "${logstash::confd_dir}/${name}":
       ensure   => $ensure,
       content  => template($config_template),
       owner    => 'root',
