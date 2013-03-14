@@ -1,5 +1,11 @@
 # Source:  https://gist.github.com/jamtur01/4385667/raw/3be6ce01014483eac71368f9525da329fe05ff6d/postfix_patterns
 
+
+# Syslog stuff
+COMPONENT ([\w._\/%-]+)
+COMPID postfix\/%{COMPONENT:component}(?:\[%{POSINT:pid}\])?
+POSTFIX %{SYSLOGTIMESTAMP:timestamp} %{SYSLOGHOST:hostname} %{COMPID}: %{QUEUEID:queueid}
+
 # Postfix stuff
 QUEUEID (?:[A-F0-9]+|NOQUEUE)
 EMAILADDRESSPART [a-zA-Z0-9_.+-=:]+
@@ -17,7 +23,7 @@ MESSAGELEVEL reject|warning|error|fatal|panic
 POSTFIXSMTPMESSAGE %{MESSAGELEVEL}: %{GREEDYDATA:reason}
 POSTFIXACTION discard|dunno|filter|hold|ignore|info|prepend|redirect|replace|reject|warn
 
-# postfix/smtp and postfix/lmtp and postfix/local
+# postfix/smtp and postfix/lmtp, postfix/local and postfix/error
 POSTFIXSMTPRELAY %{QUEUEID:qid}: to=<%{EMAILADDRESS:to}>,(?:\sorig_to=<%{EMAILADDRESS:orig_to}>,)? relay=%{RELAY}, delay=%{POSREAL:delay}, delays=%{DELAYS:delays}, dsn=%{DSN}, status=%{STATUS:result} \(%{DATA:reason}\)
 POSTFIXSMTPCONNECT connect to %{RELAY}: %{GREEDYDATA:reason}
 POSTFIXSMTP5XX %{QUEUEID:qid}: to=<%{EMAILADDRESS:to}>,(?:\sorig_to=<%{EMAILADDRESS:orig_to}>,)? relay=%{RELAY}, delay=%{POSREAL:delay}, delays=%{DELAYS:delays}, dsn=%{DSN}, status=%{STATUS:result} \(host %{HOSTNAME}\[%{IP}\] said: %{PERMERROR:responsecode} %{DATA:smtp_response} \(in reply to %{DATA:command} command\)\)
@@ -27,12 +33,14 @@ POSTFIXSMTPTIMEOUT %{QUEUEID:qid}: conversation with %{RELAY} timed out while %{
 
 # postfix/smtpd
 POSTFIXSMTPDCONNECTS (?:dis)?connect from %{RELAY}
-# POSTFIXSMTPDACTIONS %{QUEUEID:qid}: %{POSTFIXACTION}: %{DATA:command} from %{RELAY}: %{DATA:smtp_response}: %{DATA:reason}; from=<%{EMAILADDRESS:from}> to=<%{EMAILADDRESS:to} proto=%{DATA:proto} helo=<%{IPORHOST}>
+POSTFIXSMTPDMILTER %{MILTERCONNECT}|%{MILTERUNKNOWN}|%{MILTEREHLO}|%{MILTERMAIL}|%{MILTERHELO}|%{MILTERRCPT}
 POSTFIXSMTPDACTIONS %{QUEUEID:qid}: %{POSTFIXACTION}: %{DATA:command} from %{RELAY}: %{DATA:smtp_response}: %{DATA:reason}; from=<%{EMAILADDRESS:from}> to=<%{EMAILADDRESS:to}> proto=%{DATA:proto} helo=<%{IPORHOST}>
 POSTFIXSMTPDTIMEOUTS timeout after %{DATA:command} from %{RELAY}
 POSTFIXSMTPDLOGIN %{QUEUEID:qid}: client=%{DATA:client}, sasl_method=%{DATA:saslmethod}, sasl_username=%{EMAILADDRESS:saslusername}
 # postfix/cleanup
 POSTFIXCLEANUP %{QUEUEID:qid}: message-id=<%{EMAILADDRESS:messageid}>
+POSTFIXCLEANUPMILTER %{MILTERENDOFMESSAGE}
+
 
 # postfix/bounce
 POSTFIXBOUNCE %{QUEUEID:qid}: sender non-delivery notification: %{QUEUEID:bouncequeueid}
