@@ -19,7 +19,7 @@ PIDFILE=/var/run/logstash.pid
 LS_USER=logstash
 
 # location of the logstas jar file
-LS_JAR=/usr/share/logstash/logstash.jar
+LS_JAR=/opt/logstash/logstash.jar
 
 # logstash home location
 LS_HOME=/var/lib/logstash
@@ -33,8 +33,11 @@ LOG_FILE=$LOG_DIR/$NAME.log
 # logstash configuration directory
 CONF_DIR=/etc/logstash/conf.d
 
-# Open file limit
-OPEN_FILES=2048
-
 # Nice level
 NICE=19
+
+# Set LogStash options
+LS_OPTS="--log ${LOG_FILE}"
+
+# Set a home directory
+HOME=/var/lib/logstash
