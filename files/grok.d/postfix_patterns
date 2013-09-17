@@ -39,8 +39,8 @@ POSTFIXSMTPDCONNECTS (?:dis)?connect from %{RELAY}
 POSTFIXSMTPDMILTER %{MILTERCONNECT}|%{MILTERUNKNOWN}|%{MILTEREHLO}|%{MILTERMAIL}|%{MILTERHELO}|%{MILTERRCPT}
 POSTFIXSMTPDACTIONS %{QUEUEID:qid}: %{POSTFIXACTION}: %{DATA:command} from %{RELAY}: %{DATA:smtp_response}: %{DATA:reason}; from=<%{EMAILADDRESS:from}> to=<%{EMAILADDRESS:to}> proto=%{DATA:proto} helo=<%{HELO}>
 POSTFIXSMTPDTIMEOUTS timeout after %{DATA:command} from %{RELAY}
-POSTFIXSMTPDLOGIN %{QUEUEID:qid}: client=%{DATA:client}, sasl_method=%{DATA:saslmethod}, sasl_username=%{EMAILADDRESS:saslusername}
-POSTFIXSMTPDCLIENT %{QUEUEID:qid}: client=%{DATA:client}
+POSTFIXSMTPDLOGIN %{QUEUEID:qid}: client=%{DATA:client}, sasl_method=%{DATA:saslmethod}, sasl_username=%{GREEDYDATA:saslusername}
+POSTFIXSMTPDCLIENT %{QUEUEID:qid}: client=%{GREEDYDATA:client}
 POSTFIXSMTPDNOQUEUE NOQUEUE: %{POSTFIXACTION}: %{DATA:command} from %{RELAY}: %{GREEDYDATA:reason}
 POSTFIXSMTPDWARNING warning: %{IP}: %{GREEDYDATA:reason}
 POSTFIXSMTPDLOSTCONNECTION lost connection after %{DATA:smtp_response} from %{RELAY}
