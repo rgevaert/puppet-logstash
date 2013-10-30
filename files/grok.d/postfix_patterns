@@ -11,7 +11,7 @@ QUEUEID (?:[A-F0-9]+|NOQUEUE)
 EMAILADDRESSPART [a-zA-Z0-9_.+-=:]+
 EMAILADDRESS %{EMAILADDRESSPART:local}@%{EMAILADDRESSPART:remote}
 RELAY (?:%{HOSTNAME:relayhost}(?:\[%{IP:relayip}\](?::[0-9]+(.[0-9]+)?)?)?)
-#RELAY (?:%{HOSTNAME:relayhost}(?:\[%{IP:relayip}\](?:%{POSREAL:relayport})))
+CLIENT (?:%{HOSTNAME:clienthost}(?:\[%{IP:clientip}\](?::[0-9]+(.[0-9]+)?)?)?)
 POSREAL [0-9]+(.[0-9]+)?
 #DELAYS %{POSREAL:a}/%{POSREAL:b}/%{POSREAL:c}/%{POSREAL:d}
 DELAYS (%{POSREAL}[/]*)+
@@ -39,11 +39,11 @@ POSTFIXSMTPDCONNECTS (?:dis)?connect from %{RELAY}
 POSTFIXSMTPDMILTER %{MILTERCONNECT}|%{MILTERUNKNOWN}|%{MILTEREHLO}|%{MILTERMAIL}|%{MILTERHELO}|%{MILTERRCPT}
 POSTFIXSMTPDACTIONS %{QUEUEID:qid}: %{POSTFIXACTION}: %{DATA:command} from %{RELAY}: %{DATA:smtp_response}: %{DATA:reason}; from=<%{EMAILADDRESS:from}> to=<%{EMAILADDRESS:to}> proto=%{DATA:proto} helo=<%{HELO}>
 POSTFIXSMTPDTIMEOUTS timeout after %{DATA:command} from %{RELAY}
-POSTFIXSMTPDLOGIN %{QUEUEID:qid}: client=%{DATA:client}, sasl_method=%{DATA:saslmethod}, sasl_username=%{GREEDYDATA:saslusername}
-POSTFIXSMTPDCLIENT %{QUEUEID:qid}: client=%{RELAY:client}
-POSTFIXSMTPDNOQUEUE NOQUEUE: %{POSTFIXACTION}: %{DATA:command} from %{RELAY}: %{GREEDYDATA:reason}
+POSTFIXSMTPDLOGIN %{QUEUEID:qid}: client=%{CLIENT:client}, sasl_method=%{DATA:saslmethod}, sasl_username=%{GREEDYDATA:saslusername}
+POSTFIXSMTPDCLIENT %{QUEUEID:qid}: client=%{CLIENT:client}
+POSTFIXSMTPDNOQUEUE NOQUEUE: %{POSTFIXACTION}: %{DATA:command} from %{CLIENT}: %{GREEDYDATA:reason}
 POSTFIXSMTPDWARNING warning: %{IP}: %{GREEDYDATA:reason}
-POSTFIXSMTPDLOSTCONNECTION lost connection after %{DATA:smtp_response} from %{RELAY}
+POSTFIXSMTPDLOSTCONNECTION lost connection after %{DATA:smtp_response} from %{CLIENT}
 
 # postfix/cleanup
 POSTFIXCLEANUP %{POSTFIXCLEANUPMESSAGE}|%{POSTFIXCLEANUPMILTER}
