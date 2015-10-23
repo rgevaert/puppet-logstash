@@ -2,6 +2,7 @@ class logstash::service
 {
   service{
     'logstash':
-      ensure => running;
+      ensure => 'running',
+      enable => true;
   }
 }

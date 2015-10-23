@@ -1,0 +1,16 @@
+#! Managed with Puppet
+# Read from /dev/null and send to /dev/null
+# Just for testing installation of logstash
+
+input {
+  file {
+      path => '/dev/null'
+  }
+}
+
+output {
+
+  file {
+      path => '/dev/null'
+  }
+}

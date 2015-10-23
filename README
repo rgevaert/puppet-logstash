@@ -1,4 +1,14 @@
 Logstash puppet module.
 
-It uses the Debian package that you can create from upstream.  See 
-https://github.com/logstash/logstash/blob/master/debian/build.sh
+include logstash
+
+If you want to disable using the upstream repo do:
+
+class {
+ 'logstash':
+    major_release => '';
+}
+
+You can also override the default major release by passing something like '1.X'.
+
+By default the config installed is useless.  You need to override yourselves with the config_template parameter'
